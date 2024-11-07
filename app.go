@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 //go:embed templates/*
@@ -14,11 +16,9 @@ var resources embed.FS
 var t = template.Must(template.ParseFS(resources, "templates/*"))
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+	godotenv.Load()
 
-	}
+	port := os.Getenv("PORT")
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		data := map[string]string{
