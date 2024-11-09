@@ -59,7 +59,7 @@ func (h *Handler) handleCreateRsvp(w http.ResponseWriter, r *http.Request) {
 		Rsvp:      rsvp.Rsvp,
 	})
 	if err != nil {
-		utils.WriteError(w, http.StatusInternalServerError, err)
+		utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("database error"))
 		return
 	}
 
@@ -84,4 +84,7 @@ func (h *Handler) handlePutRsvp(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("database error"))
 		return
 	}
+
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(newRsvp)
 }

@@ -8,8 +8,10 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	guestsControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/guests"
 	inviteeControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/invitees"
 	rsvpControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/rsvp"
+	guestsServices "github.com/jamesdavidyu/gender_reveal_service/services/guests"
 	inviteeServices "github.com/jamesdavidyu/gender_reveal_service/services/invitees"
 	rsvpServices "github.com/jamesdavidyu/gender_reveal_service/services/rsvp"
 	"github.com/jamesdavidyu/gender_reveal_service/utils"
@@ -43,6 +45,10 @@ func (s *APIServer) Run() error {
 	rsvpStore := rsvpControllers.NewStore(s.db)
 	rsvpHandler := rsvpServices.NewHandler(rsvpStore, inviteeStore)
 	rsvpHandler.RegisterRoutes(subrouter)
+
+	guestsStore := guestsControllers.NewStore(s.db)
+	guestsHandler := guestsServices.NewHandler(guestsStore, inviteeStore)
+	guestsHandler.RegisterRoutes(subrouter)
 
 	enhancedRouter := utils.EnableCORS(utils.JSONContentTypeMiddleware(router))
 
