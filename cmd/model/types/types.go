@@ -8,6 +8,12 @@ type InviteeStore interface {
 	CreateInvitee(Invitees) error
 }
 
+type RsvpStore interface {
+	GetRsvpByInviteeId(inviteeId string) (*Rsvp, error)
+	CreateRsvp(Rsvp) error
+	UpdateRsvpWithId(Rsvp) error
+}
+
 type Invitees struct {
 	Id        string    `json:"id"`
 	Name      string    `json:"name"`
@@ -25,4 +31,9 @@ type Rsvp struct {
 	InviteeId string    `json:"inviteeId"`
 	Rsvp      string    `json:"rsvp"`
 	CreatedAt time.Time `json:"createdAt"`
+}
+
+type CreateRsvpPayload struct {
+	InviteeId string `json:"inviteeId"`
+	Rsvp      string `json:"rsvp"`
 }

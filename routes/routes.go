@@ -9,7 +9,9 @@ import (
 
 	"github.com/gorilla/mux"
 	inviteeControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/invitees"
+	rsvpControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/rsvp"
 	inviteeServices "github.com/jamesdavidyu/gender_reveal_service/services/invitees"
+	rsvpServices "github.com/jamesdavidyu/gender_reveal_service/services/rsvp"
 	"github.com/jamesdavidyu/gender_reveal_service/utils"
 	"github.com/joho/godotenv"
 )
@@ -37,6 +39,10 @@ func (s *APIServer) Run() error {
 	inviteeStore := inviteeControllers.NewStore(s.db)
 	inviteeHandler := inviteeServices.NewHandler(inviteeStore)
 	inviteeHandler.RegisterRoutes(subrouter)
+
+	rsvpStore := rsvpControllers.NewStore(s.db)
+	rsvpHandler := rsvpServices.NewHandler(rsvpStore, inviteeStore)
+	rsvpHandler.RegisterRoutes(subrouter)
 
 	enhancedRouter := utils.EnableCORS(utils.JSONContentTypeMiddleware(router))
 

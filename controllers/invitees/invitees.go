@@ -11,7 +11,10 @@ type Store struct {
 	db *sql.DB
 }
 
-// GetInviteeById implements types.InviteeStore.
+func NewStore(db *sql.DB) *Store {
+	return &Store{db: db}
+}
+
 func (s *Store) GetInviteeById(id string) (*types.Invitees, error) {
 	rows, err := s.db.Query("SELECT * FROM invitees WHERE id = $1", id)
 	if err != nil {
@@ -27,10 +30,6 @@ func (s *Store) GetInviteeById(id string) (*types.Invitees, error) {
 	}
 
 	return invitee, nil
-}
-
-func NewStore(db *sql.DB) *Store {
-	return &Store{db: db}
 }
 
 func (s *Store) GetInviteeWithName(name string) (*types.Invitees, error) {

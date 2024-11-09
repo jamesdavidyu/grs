@@ -8,6 +8,8 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"github.com/jamesdavidyu/gender_reveal_service/cmd/model/types"
+	"github.com/jamesdavidyu/gender_reveal_service/config"
+	"github.com/jamesdavidyu/gender_reveal_service/services/auth"
 	"github.com/jamesdavidyu/gender_reveal_service/utils"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -22,6 +24,7 @@ func NewHandler(store types.InviteeStore) *Handler {
 
 func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/auth/register", h.handleRegister).Methods("POST")
+	router.HandleFunc("/auth/login", h.handleLogin).Methods("POST")
 }
 
 func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
@@ -49,5 +52,43 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.WriteError(w, http.StatusAlreadyReported, fmt.Errorf("already entered"))
 		return
+	}
+}
+
+func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
+	var login types.Register
+	if err := json.NewDecoder(r.Body).Decode(&login); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("bad data"))
+		return
+	}
+
+	if err := utils.Validate.Struct(login); err != nil {
+		errors := err.(validator.ValidationErrors)
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid submission for %v", errors))
+		return
+	}
+
+	invitee, err := h.store.GetInviteeWithName(login.Name)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("database error"))
+		return
+	}
+
+	if bcrypt.CompareHashAndPassword([]byte(invitee.Password), []byte(login.Password)) != nil {
+		utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("database error"))
+		return
+	} else {
+		secret := []byte(config.Envs.JWTSecret)
+		token, err := auth.CreateJWT(secret, invitee.Id)
+		if err != nil {
+			utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("database error"))
+			return
+		}
+
+		json.NewEncoder(w).Encode(map[string]any{
+			"token":     token,
+			"inviteeId": invitee.Id,
+			"name":      invitee.Name,
+		})
 	}
 }

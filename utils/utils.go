@@ -59,3 +59,19 @@ func ScanRowIntoInvitee(rows *sql.Rows) (*types.Invitees, error) {
 
 	return invitee, nil
 }
+
+func ScanRowIntoRsvp(rows *sql.Rows) (*types.Rsvp, error) {
+	rsvp := new(types.Rsvp)
+
+	err := rows.Scan(
+		&rsvp.Id,
+		&rsvp.InviteeId,
+		&rsvp.Rsvp,
+		&rsvp.CreatedAt,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return rsvp, nil
+}
