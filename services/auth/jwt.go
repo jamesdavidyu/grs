@@ -31,12 +31,12 @@ func WithJWTAuth(handlerFunc http.HandlerFunc, store types.InviteeStore) http.Ha
 
 		token, err := validateToken(tokenString)
 		if err != nil {
-			permissionDenied(w)
+			PermissionDenied(w)
 			return
 		}
 
 		if !token.Valid {
-			permissionDenied(w)
+			PermissionDenied(w)
 			return
 		}
 
@@ -46,7 +46,7 @@ func WithJWTAuth(handlerFunc http.HandlerFunc, store types.InviteeStore) http.Ha
 
 		invitee, err := store.GetInviteeById(inviteeId)
 		if err != nil {
-			permissionDenied(w)
+			PermissionDenied(w)
 			return
 		}
 
@@ -94,7 +94,7 @@ func validateToken(t string) (*jwt.Token, error) {
 	})
 }
 
-func permissionDenied(w http.ResponseWriter) {
+func PermissionDenied(w http.ResponseWriter) {
 	utils.WriteError(w, http.StatusForbidden, fmt.Errorf("permission denied"))
 }
 

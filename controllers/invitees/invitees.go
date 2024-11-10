@@ -16,7 +16,7 @@ func NewStore(db *sql.DB) *Store {
 }
 
 func (s *Store) GetInviteeById(id string) (*types.Invitees, error) {
-	rows, err := s.db.Query("SELECT * FROM invitees WHERE id = $1", id)
+	rows, err := s.db.Query("SELECT id, name, password, created_at FROM invitees WHERE id = $1", id)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func (s *Store) GetInviteeById(id string) (*types.Invitees, error) {
 
 func (s *Store) GetInviteeWithName(name string) (*types.Invitees, error) {
 	rows, err := s.db.Query(
-		`SELECT * FROM invitees
+		`SELECT id, name, password, created_at FROM invitees
 		WHERE name = $1`, name,
 	)
 	if err != nil {
@@ -64,4 +64,23 @@ func (s *Store) CreateInvitee(invitee types.Invitees) error {
 	}
 
 	return nil
+}
+
+func (s *Store) GetRoleById(id string) (*types.Invitees, error) {
+	rows, err := s.db.Query("SELECT role FROM invitees WHERE id = $1", id)
+	if err != nil {
+		return nil, err
+	}
+
+	invitee := new(types.Invitees)
+	for rows.Next() {
+		err = rows.Scan(
+			&invitee.Role,
+		)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return invitee, nil
 }

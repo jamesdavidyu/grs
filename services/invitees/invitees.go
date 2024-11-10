@@ -23,7 +23,7 @@ func NewHandler(store types.InviteeStore) *Handler {
 }
 
 func (h *Handler) RegisterRoutes(router *mux.Router) {
-	router.HandleFunc("/auth/register", h.handleRegister).Methods("POST")
+	router.HandleFunc("/auth/register", auth.WithJWTAuth(h.handleRegister, h.store)).Methods("POST")
 	router.HandleFunc("/auth/login", h.handleLogin).Methods("POST")
 }
 
@@ -37,20 +37,34 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 	if err := utils.Validate.Struct(register); err != nil {
 		errors := err.(validator.ValidationErrors)
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid submission for %v", errors))
-	}
-
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(register.Password), bcrypt.DefaultCost)
-	if err != nil {
-		utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("database error"))
 		return
 	}
 
-	err = h.store.CreateInvitee(types.Invitees{
-		Name:     register.Name,
-		Password: string(hashedPassword),
-	})
+	inviteeId := auth.GetInviteeIdFromContext(r.Context())
+
+	role, err := h.store.GetRoleById(inviteeId)
 	if err != nil {
-		utils.WriteError(w, http.StatusAlreadyReported, fmt.Errorf("already entered"))
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	if role.Role == "admin" {
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(register.Password), bcrypt.DefaultCost)
+		if err != nil {
+			utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("database error"))
+			return
+		}
+
+		err = h.store.CreateInvitee(types.Invitees{
+			Name:     register.Name,
+			Password: string(hashedPassword),
+		})
+		if err != nil {
+			utils.WriteError(w, http.StatusAlreadyReported, fmt.Errorf("already entered"))
+			return
+		}
+	} else {
+		auth.PermissionDenied(w)
 		return
 	}
 }

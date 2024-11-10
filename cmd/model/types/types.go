@@ -6,6 +6,7 @@ type InviteeStore interface {
 	GetInviteeById(id string) (*Invitees, error)
 	GetInviteeWithName(name string) (*Invitees, error)
 	CreateInvitee(Invitees) error
+	GetRoleById(id string) (*Invitees, error)
 }
 
 type RsvpStore interface {
@@ -24,6 +25,7 @@ type Invitees struct {
 	Id        string    `json:"id"`
 	Name      string    `json:"name"`
 	Password  string    `json:"-"`
+	Role      string    `json:"role"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 
