@@ -21,6 +21,10 @@ type GuestsStore interface {
 	UpdateGuestsWithId(Guests) error
 }
 
+type DashboardStore interface {
+	GetRsvps() ([]Dashboard, error)
+}
+
 type Invitees struct {
 	Id        string    `json:"id"`
 	Name      string    `json:"name"`
@@ -56,4 +60,11 @@ type Guests struct {
 type GuestsPayload struct {
 	InviteeId string `json:"inviteeId"`
 	Guests    string `json:"guests"`
+}
+
+type Dashboard struct {
+	Id     string `json:"id"`
+	Rsvp   string `json:"rsvp"`
+	Name   string `json:"name"`
+	Guests string `json:"guests"`
 }

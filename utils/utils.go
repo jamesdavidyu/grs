@@ -91,3 +91,19 @@ func ScanRowIntoGuests(rows *sql.Rows) (*types.Guests, error) {
 
 	return guests, nil
 }
+
+func ScanRowIntoDashboard(rows *sql.Rows) (*types.Dashboard, error) {
+	dashboard := new(types.Dashboard)
+
+	err := rows.Scan(
+		&dashboard.Id,
+		&dashboard.Name,
+		&dashboard.Rsvp,
+		&dashboard.Guests,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return dashboard, nil
+}

@@ -44,7 +44,7 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 
 	role, err := h.store.GetRoleById(inviteeId)
 	if err != nil {
-		utils.WriteError(w, http.StatusBadRequest, err)
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("bad data"))
 		return
 	}
 
