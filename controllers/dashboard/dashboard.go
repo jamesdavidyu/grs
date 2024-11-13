@@ -27,7 +27,8 @@ func (s *Store) GetRsvps() ([]types.Dashboard, error) {
 			END) AS guests 
 		FROM rsvp r
 		LEFT JOIN invitees i ON i.id = r.invitee_id
-		LEFT JOIN guests g ON g.invitee_id = r.invitee_id`,
+		LEFT JOIN guests g ON g.invitee_id = r.invitee_id
+		ORDER BY rsvp DESC`,
 	)
 	if err != nil {
 		return nil, err
