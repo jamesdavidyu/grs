@@ -11,10 +11,12 @@ import (
 	dashboardControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/dashboard"
 	guestsControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/guests"
 	inviteeControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/invitees"
+	newInviteeControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/newinvitee"
 	rsvpControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/rsvp"
 	dashboardServices "github.com/jamesdavidyu/gender_reveal_service/services/dashboard"
 	guestsServices "github.com/jamesdavidyu/gender_reveal_service/services/guests"
 	inviteeServices "github.com/jamesdavidyu/gender_reveal_service/services/invitees"
+	newInviteeServices "github.com/jamesdavidyu/gender_reveal_service/services/newinvitee"
 	rsvpServices "github.com/jamesdavidyu/gender_reveal_service/services/rsvp"
 	"github.com/jamesdavidyu/gender_reveal_service/utils"
 	"github.com/joho/godotenv"
@@ -55,6 +57,10 @@ func (s *APIServer) Run() error {
 	dashboardStore := dashboardControllers.NewStore(s.db)
 	dashboardHandler := dashboardServices.NewHandler(dashboardStore, inviteeStore)
 	dashboardHandler.RegisterRoutes(subrouter)
+
+	newInviteeStore := newInviteeControllers.NewStore(s.db)
+	newInviteeHandler := newInviteeServices.NewHandler(newInviteeStore)
+	newInviteeHandler.RegisterRoutes(subrouter)
 
 	enhancedRouter := utils.EnableCORS(utils.JSONContentTypeMiddleware(router))
 

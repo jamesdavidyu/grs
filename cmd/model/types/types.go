@@ -25,6 +25,10 @@ type DashboardStore interface {
 	GetRsvps() ([]Dashboard, error)
 }
 
+type NewInviteeStore interface {
+	CreateNewInvitee(NewInvitee) error
+}
+
 type Invitees struct {
 	Id        string    `json:"id"`
 	Name      string    `json:"name"`
@@ -67,4 +71,16 @@ type Dashboard struct {
 	Rsvp   string `json:"rsvp"`
 	Name   string `json:"name"`
 	Guests string `json:"guests"`
+}
+
+type NewInvitee struct {
+	Id        string    `json:"id"`
+	Name      string    `json:"name"`
+	Rsvp      string    `json:"rsvp"`
+	CreatedAt time.Time `json:"createdAt"`
+}
+
+type NewInviteePayload struct {
+	Name string `json:"name"`
+	Rsvp string `json:"rsvp"`
 }
