@@ -84,12 +84,12 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 
 	invitee, err := h.store.GetInviteeWithName(login.Name)
 	if err != nil {
-		utils.WriteError(w, http.StatusNotFound, fmt.Errorf("database error"))
+		utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("database error"))
 		return
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(invitee.Password), []byte(login.Password)) != nil {
-		utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("database error"))
+		utils.WriteError(w, http.StatusNotFound, fmt.Errorf("database error"))
 		return
 	} else {
 		secret := []byte(config.Envs.JWTSecret)
