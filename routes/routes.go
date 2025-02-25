@@ -11,11 +11,13 @@ import (
 	dashboardControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/dashboard"
 	guestsControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/guests"
 	inviteeControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/invitees"
+	newGuestsControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/newGuests"
 	newInviteeControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/newInvitee"
 	rsvpControllers "github.com/jamesdavidyu/gender_reveal_service/controllers/rsvp"
 	dashboardServices "github.com/jamesdavidyu/gender_reveal_service/services/dashboard"
 	guestsServices "github.com/jamesdavidyu/gender_reveal_service/services/guests"
 	inviteeServices "github.com/jamesdavidyu/gender_reveal_service/services/invitees"
+	newGuestsServices "github.com/jamesdavidyu/gender_reveal_service/services/newGuests"
 	newInviteeServices "github.com/jamesdavidyu/gender_reveal_service/services/newInvitee"
 	rsvpServices "github.com/jamesdavidyu/gender_reveal_service/services/rsvp"
 	"github.com/jamesdavidyu/gender_reveal_service/utils"
@@ -61,6 +63,10 @@ func (s *APIServer) Run() error {
 	newInviteeStore := newInviteeControllers.NewStore(s.db)
 	newInviteeHandler := newInviteeServices.NewHandler(newInviteeStore)
 	newInviteeHandler.RegisterRoutes(subrouter)
+
+	newGuestsStore := newGuestsControllers.NewStore(s.db)
+	newGuestsHandler := newGuestsServices.NewHandler(newGuestsStore)
+	newGuestsHandler.RegisterRoutes(subrouter)
 
 	enhancedRouter := utils.EnableCORS(utils.JSONContentTypeMiddleware(router))
 

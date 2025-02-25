@@ -29,6 +29,10 @@ type NewInviteeStore interface {
 	CreateNewInvitee(NewInvitee) error
 }
 
+type NewGuestsStore interface {
+	CreateNewGuests(NewGuests) error
+}
+
 type Invitees struct {
 	Id        string    `json:"id"`
 	Name      string    `json:"name"`
@@ -83,4 +87,16 @@ type NewInvitee struct {
 type NewInviteePayload struct {
 	Name string `json:"name"`
 	Rsvp string `json:"rsvp"`
+}
+
+type NewGuests struct {
+	Id        string    `json:"id"`
+	Name      string    `json:"name"`
+	Guests    string    `json:"guests"`
+	CreatedAt time.Time `json:"createdAt"`
+}
+
+type NewGuestsPayload struct {
+	Name   string `json:"name"`
+	Guests string `json:"guests"`
 }
