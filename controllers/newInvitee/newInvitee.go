@@ -16,10 +16,9 @@ func NewStore(db *sql.DB) *Store {
 
 func (s *Store) CreateNewInvitee(newInvitee types.NewInvitee) error {
 	_, err := s.db.Exec(
-		`INSERT INTO new_invitees (name, rsvp)
-		VALUES ($1, $2)`,
+		`INSERT INTO new_invitees (name)
+		VALUES ($1)`,
 		newInvitee.Name,
-		newInvitee.Rsvp,
 	)
 	if err != nil {
 		return err

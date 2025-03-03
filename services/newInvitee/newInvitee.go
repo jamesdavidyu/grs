@@ -37,7 +37,6 @@ func (h *Handler) handleCreateNewInvitee(w http.ResponseWriter, r *http.Request)
 
 	err := h.store.CreateNewInvitee(types.NewInvitee{
 		Name: newInvitee.Name,
-		Rsvp: newInvitee.Rsvp,
 	})
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("database error"))

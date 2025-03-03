@@ -80,13 +80,11 @@ type Dashboard struct {
 type NewInvitee struct {
 	Id        string    `json:"id"`
 	Name      string    `json:"name"`
-	Rsvp      string    `json:"rsvp"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 
 type NewInviteePayload struct {
 	Name string `json:"name"`
-	Rsvp string `json:"rsvp"`
 }
 
 type NewGuests struct {
