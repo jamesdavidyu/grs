@@ -37,6 +37,7 @@ func (h *Handler) handleCreateNewGuests(w http.ResponseWriter, r *http.Request) 
 
 	err := h.store.CreateNewGuests(types.NewGuests{
 		Name:   newGuests.Name,
+		Rsvp:   newGuests.Rsvp,
 		Guests: newGuests.Guests,
 	})
 	if err != nil {
