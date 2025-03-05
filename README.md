@@ -1,9 +1,1 @@
-# go-example
-
-A minimal Go application for [fly.io Getting Started](https://fly.io/docs/getting-started/golang/) documentation and tutorials.
-
-To get started:
-
-1. clone this repo
-2. `flyctl launch`
-3. view the deployed app with flyctl open
+My wife and I wanted to invite our friends to our soon-to-be son's gender reveal party. We wanted to be able to upload names into a guest list, collect RSVPs for these guests, and be able to see who has RSVP'd from anywhere and be able to send these data to anyone (e.g., other planners, etc.) regardless of the tool others may use to view data. I took advantage of this chance to build an app and this repository with code for the API of this app was born. This API is used with two UIs that can be found at https://github.com/jamesdavidyu/gender_reveal_ui and https://github.com/jamesdavidyu/baby-shower-ui.
